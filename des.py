@@ -13,15 +13,15 @@ def getRight(bloc):
   D = dict()
 
   for i in range(32, 64):
-    D[i] = bloc[i]
+    D[i - 32] = bloc[i]
 
   return D
 
-def permute1(bloc):
+def permute(bloc, matrix):
   newbloc = dict()
 
-  for i in range(64):
-    newbloc[i] = bloc[PI[i] - 1]
+  for i in range(len(bloc)):
+    newbloc[i] = bloc[matrix[i] - 1]
 
   return newbloc
 
@@ -63,20 +63,21 @@ def convert64to56(key):
 def encode_des():
   key = "0100110010101110110111001010110111000100011010001100100000101010"
   inputFile = "M.txt"
-  K = []
+  K = dict()
   blocs = []
 
-  #   Fractionnement du texte en blocs de 64 bits (8 octets)
-  #   Permutation initiale des blocs
+  # Fractionnement du texte en blocs de 64 bits (8 octets)
   for bloc in fractionText(inputFile):
-    bloc = permute1(bloc)
+    # Permutation initiale des blocs
+    bloc = permute(bloc, PI)
+    # Découpage des blocs en deux parties: gauche et droite, nommées G et D ;
     G = getLeft(bloc)
     D = getRight(bloc)
-    printBloc(G)
-    printBloc(D)
 
-  #   Découpage des blocs en deux parties: gauche et droite, nommées G et D ;
-  #   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
+    #   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
+    for i in range (16):
+        D = permute(D, E)
+        printBloc(D)
   #   Recollement des parties gauche et droite puis permutation initiale inverse.
 
   # TODO : key = open & read file key
