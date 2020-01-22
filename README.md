@@ -10,9 +10,9 @@ Implémentation python du chiffrement et déchiffrement DES.
 
 [Truc sur yield parce qu'on adore](https://www.geeksforgeeks.org/use-yield-keyword-instead-return-keyword-python/)
 
-[Perceptio : vidéo sur l'lgo DES](https://reseau-ges.percipio.com/courses/8e8d3e93-0d9c-11e7-b6c3-0242c0a80802/videos/8e8d3ea2-0d9c-11e7-b6c3-0242c0a80802)
+[Percipio : vidéo sur l'lgo DES](https://reseau-ges.percipio.com/courses/8e8d3e93-0d9c-11e7-b6c3-0242c0a80802/videos/8e8d3ea2-0d9c-11e7-b6c3-0242c0a80802)
 
-[Perceptio : bouquin chouette, algo XOR et autres trucs](https://reseau-ges.percipio.com/books/4bc44c80-f383-11e6-ad5d-0242c0a80607)
+[Percipio : bouquin chouette, algo XOR et autres trucs](https://reseau-ges.percipio.com/books/4bc44c80-f383-11e6-ad5d-0242c0a80607)
 
 
 **Workflow git**
