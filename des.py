@@ -99,6 +99,8 @@ def encode_des():
   # K = convert64to56(key)
   # print56(key)
 
+  #keys=get16KeysFromKey(K)
+
 
 
 #########################################
