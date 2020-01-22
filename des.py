@@ -59,7 +59,7 @@ def shiftKey(key):
     newKey += key[(i+1)%16]
   return newKey
 
-def get16keysfromkey(key):
+def get16KeysFromKey(key):
   keys = dict(16)
   for i in range(0, 16):
     key = shiftKey(key)
