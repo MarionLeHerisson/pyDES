@@ -47,13 +47,25 @@ def fractionText(inputFile):
 def convert64to56(key):
   newkey = ""
   i = 0
-
   for bit in key:
     if (i + 1) % 8 != 0:
       newkey += bit
     i += 1
-
   return newkey
+
+def shiftKey(key):
+  newKey=""
+  for i in range(0,16):
+    newKey += key[(i+1)%16]
+  return newKey
+
+def get16keysfromkey(key):
+  keys = dict(16)
+  for i in range(0, 16):
+    key = shiftKey(key)
+    keys[i] = key
+  return keys
+
 
 #########################################
 #                                       #
