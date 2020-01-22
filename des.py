@@ -82,10 +82,11 @@ def getKeyFromFileName(fileName):
 #                                       #
 #########################################
 def encode_des():
-  #TODO il faut faire une boucle de 1 à 6 ici non ? et mettre gnre "fileName"="/Messages/Clef_de_1.txt"
+  #TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
   #TODO et la key = fileName += i
   #key = "0100110010101110110111001010110111000100011010001100100000101010"
-  key = getKeyFromFileName("/Messages/Clef_de_1.txt")
+  i=1
+  key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
   inputFile = "M.txt"
   K = dict()
   blocs = []
