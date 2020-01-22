@@ -17,6 +17,7 @@ def getRight(bloc):
 
   return D
 
+# bloc and matrix are dictionaries
 def permute(bloc, matrix):
   newbloc = dict()
 
@@ -26,7 +27,7 @@ def permute(bloc, matrix):
   return newbloc
 
 def fractionText(inputFile):
-  f = open("M.txt", "r")
+  f = open(inputFile, "r")
   content = f.read()
   cursor = 0
   bloc = dict()
@@ -55,16 +56,49 @@ def convert64to56(key):
 
   return newkey
 
+def exOR(matrix, key):
+  return 0
+
+def openKey(inputFile):
+  try :
+    f = open(inputFile, "r")
+    content = f.read()
+    f.close()
+
+    try:
+      if len(content) == 64:
+        return content
+
+    except :
+      print(" Error : invalid key")
+      return -1
+
+  except:
+      print(" Error : file " + inputFile + " not found")
+      return -1
+
 #########################################
 #                                       #
 #                D E S                  #
 #                                       #
 #########################################
 def encode_des():
-  key = "0100110010101110110111001010110111000100011010001100100000101010"
+  # TODO : entrer clé & fichier en ligne de commande
   inputFile = "M.txt"
+  keyFileName = "testKey.txt"
+
   K = dict()
   blocs = []
+
+  key = openKey(keyFileName)
+  if key == -1 : return 0
+
+  print64(key)
+  K = convert64to56(key)
+  print56(K)
+
+  K = permute(K, CP1)   # TODO TO BE CONTINUED -> ERROR INDEX OUT OF RANGE
+  print56(K)
 
   # Fractionnement du texte en blocs de 64 bits (8 octets)
   for bloc in fractionText(inputFile):
@@ -76,16 +110,11 @@ def encode_des():
 
     #   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
     for i in range (16):
-        D = permute(D, E)
+        D = permute(D, E) # Expansion de D0
         printBloc(D)
+#         D = exOR(D, K) # OU exclusif avec la clé K1   # TODO
+#         printBloc(D)
   #   Recollement des parties gauche et droite puis permutation initiale inverse.
-
-  # TODO : key = open & read file key
-  # TODO : verif que la clé fait bien 64 bits
-
-  # print64(key)
-  # K = convert64to56(key)
-  # print56(key)
 
 
 

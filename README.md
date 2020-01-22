@@ -2,6 +2,8 @@
 
 Implémentation python du chiffrement et déchiffrement DES.
 
+Lancer avec `python3 des.py`.
+
 **Aides**
 
 [Constantes du DES sur Wikipedia](https://fr.wikipedia.org/wiki/Constantes_du_DES)
