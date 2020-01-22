@@ -48,13 +48,32 @@ def fractionText(inputFile):
 def convert64to56(key):
   newkey = ""
   i = 0
-
   for bit in key:
     if (i + 1) % 8 != 0:
       newkey += bit
     i += 1
-
   return newkey
+
+def shiftKey(key):
+  newKey=""
+  for i in range(0,16):
+    newKey += key[(i+1)%16]
+  return newKey
+
+def get16KeysFromKey(key):
+  keys = dict(16)
+  for i in range(0, 16):
+    key = shiftKey(key)
+    keys[i] = key
+  return keys
+
+def getKeyFromFileName(fileName):
+  f = open(fileName, "r")
+  content = f.read()
+  if content != "" or len(content)!=64:
+    return content
+  else:
+    return ""
 
 def exOR(matrix, key):
   return 0
@@ -77,12 +96,18 @@ def openKey(inputFile):
       print(" Error : file " + inputFile + " not found")
       return -1
 
+
 #########################################
 #                                       #
 #                D E S                  #
 #                                       #
 #########################################
 def encode_des():
+  #TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
+  #TODO et la key = fileName += i
+  #key = "0100110010101110110111001010110111000100011010001100100000101010"
+  i=1
+  key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
   # TODO : entrer clé & fichier en ligne de commande
   inputFile = "M.txt"
   keyFileName = "testKey.txt"
@@ -115,6 +140,16 @@ def encode_des():
 #         D = exOR(D, K) # OU exclusif avec la clé K1   # TODO
 #         printBloc(D)
   #   Recollement des parties gauche et droite puis permutation initiale inverse.
+
+  # TODO : key = open & read file key
+  # TODO : verif que la clé fait bien 64 bits
+
+  # print64(key)
+  # K = convert64to56(key)
+  # print56(key)
+
+  #keys=get16KeysFromKey(K)
+
 
 
 
