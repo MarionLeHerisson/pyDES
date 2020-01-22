@@ -113,54 +113,53 @@ def openKey(inputFile):
 #                                       #
 #########################################
 def encode_des():
-    # TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
-    # TODO et la key = fileName += i
-    # key = "0100110010101110110111001010110111000100011010001100100000101010"
-    i = 1
-    key = getKeyFromFileName("/Messages/Clef_de_" + str(i) + ".txt")
-    # TODO : entrer clé & fichier en ligne de commande
-    inputFile = "M.txt"
-    keyFileName = "testKey.txt"
 
-    K = dict()
-    blocs = []
+  # TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
+  # TODO et la key = fileName += i
+  # TODO : entrer clé & fichier en ligne de commande
 
-    key = openKey(keyFileName)
-    if key == -1: return 0
+  i=1
+  inputFile = "M.txt"
+  keyFileName = "testKey.txt"
 
-    print64(key)
-    K = convert64to56(key)
-    print56(K)
+  K = dict()
+  blocs = []
 
-    K = permute(K, CP1)  # TODO TO BE CONTINUED -> ERROR INDEX OUT OF RANGE
-    print56(K)
+  # au choix :shrug:
+  key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
+  key = openKey(keyFileName)
+  if key == -1 : return 0
 
-    # Fractionnement du texte en blocs de 64 bits (8 octets)
-    for bloc in fractionText(inputFile):
-        # Permutation initiale des blocs
-        bloc = permute(bloc, PI)
-        # Découpage des blocs en deux parties: gauche et droite, nommées G et D ;
-        G = getLeft(bloc)
-        D = getRight(bloc)
+  print64(key)
+  K = convert64to56(key)
+  print56(K)
 
-        #   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
-        for i in range(16):
-            D = permute(D, E)  # Expansion de D0
-            printBloc(D)
+  K = permute(K, CP1)   # TODO TO BE CONTINUED -> ERROR INDEX OUT OF RANGE
+  print56(K)
 
+  keys = get16KeysFromKey(K)
 
+  # Fractionnement du texte en blocs de 64 bits (8 octets)
+  for bloc in fractionText(inputFile):
+    # Permutation initiale des blocs
+    bloc = permute(bloc, PI)
+    # Découpage des blocs en deux parties: gauche et droite, nommées G et D ;
+    G = getLeft(bloc)
+    D = getRight(bloc)
+
+    #   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
+    for i in range (16):
+        D = permute(D, E) # Expansion de D0
+        printBloc(D)
 #         D = exOR(D, K) # OU exclusif avec la clé K1   # TODO
 #         printBloc(D)
-#   Recollement des parties gauche et droite puis permutation initiale inverse.
-
-# TODO : key = open & read file key
-# TODO : verif que la clé fait bien 64 bits
+  #   Recollement des parties gauche et droite puis permutation initiale inverse.
 
 # print64(key)
 # K = convert64to56(key)
 # print56(key)
 
-# keys=get16KeysFromKey(K)
+
 
 
 #########################################
