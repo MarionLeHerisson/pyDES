@@ -103,18 +103,19 @@ def openKey(inputFile):
 #                                       #
 #########################################
 def encode_des():
-  #TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
-  #TODO et la key = fileName += i
-  #key = "0100110010101110110111001010110111000100011010001100100000101010"
-  i=1
-  key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
+  # TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
+  # TODO et la key = fileName += i
   # TODO : entrer clé & fichier en ligne de commande
+
+  i=1
   inputFile = "M.txt"
   keyFileName = "testKey.txt"
 
   K = dict()
   blocs = []
 
+  # au choix :shrug:
+  key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
   key = openKey(keyFileName)
   if key == -1 : return 0
 
@@ -140,13 +141,6 @@ def encode_des():
 #         D = exOR(D, K) # OU exclusif avec la clé K1   # TODO
 #         printBloc(D)
   #   Recollement des parties gauche et droite puis permutation initiale inverse.
-
-  # TODO : key = open & read file key
-  # TODO : verif que la clé fait bien 64 bits
-
-  # print64(key)
-  # K = convert64to56(key)
-  # print56(key)
 
   #keys=get16KeysFromKey(K)
 
