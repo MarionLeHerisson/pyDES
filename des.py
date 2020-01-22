@@ -66,6 +66,15 @@ def get16KeysFromKey(key):
     keys[i] = key
   return keys
 
+def getKeyFromFileName(fileName):
+  f = open(fileName, "r")
+  content = f.read()
+  if content != "" or len(content)!=64:
+    return content
+  else:
+    return ""
+
+
 
 #########################################
 #                                       #
