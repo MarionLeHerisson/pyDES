@@ -5,7 +5,7 @@ from resources import *
 def getLeft(bloc):
     G = dict()
 
-    for i in range(28): #on est sur 56 et non 64, il faut couper en 28
+    for i in range((len(bloc)//2)): #on est sur 56 et non 64, il faut couper en 28
         G[i] = bloc[i]
 
     return G
@@ -14,8 +14,8 @@ def getLeft(bloc):
 def getRight(bloc):
     D = dict()
 
-    for i in range(28, 56):
-        D[i - 28] = bloc[i]
+    for i in range((len(bloc)//2), len(bloc)):
+        D[i - (len(bloc)//2)] = bloc[i]
 
     return D
 
@@ -25,8 +25,10 @@ def permute(bloc, matrix):
     newbloc = dict()
     #print(len(bloc))
     #print64(bloc)
-    for i in range(len(bloc)-16): #TODO alors, il faut mettre -16, mais je ne sais pas du tout pk
+    for i in range(len(bloc)-8): #TODO alors, il faut mettre -16, mais je ne sais pas du tout pk, les espaces?
         newbloc[i] = bloc[matrix[i] - 1]
+    print("permute")
+    print64(newbloc)
     return newbloc
 
 
@@ -69,8 +71,8 @@ def shiftKeyBy16(key):
 
 def shiftKeyBy8(key):
     newKey = ""
-    for i in range(0, 8):
-        newKey += key[(i + 1) % 8]
+    for i in range(0, len(key)):
+        newKey += key[(i+1)% len(key)]
     return newKey
 
 
@@ -84,23 +86,25 @@ def dictToString(dict):
 
 def get16KeysFromKey(key):
     keys = dict()
+    # separer la clé en deux
+    print("la cle :" + dictToString(key))
+    tempG = dictToString(getLeft(key))
+    print("GAUCHE : " + dictToString(tempG))
+    tempD = dictToString(getRight(key))
+    print("DROITE : " + dictToString(tempD))
     for i in range(0, 16):
-        # separer la clé en deux
-        print ("la cle :" + dictToString(key))
-        tempG = dictToString(getLeft(key))
-        print("GAUCHE : " + dictToString(tempG))
-        tempD = dictToString(getRight(key))
-        print("DROITE : " + dictToString(tempD))
-        # inverser G
-        shiftKeyBy8(tempG)
-        # Inverser D
-        shiftKeyBy8(tempD)
+        # shift G
+        tempG = shiftKeyBy8(tempG)
+        print("shifted G : "+tempG)
+        # shift D
+        tempD = shiftKeyBy8(tempD)
+        print("shifted D : " + tempD)
         # concatener G et D
         tempGD = tempG + tempD
         print("concaténation :" + tempGD)
         # permuter GD par CP2
         key = permute(tempGD, CP2)
-        print("Permuted :"+dictToString(key))
+        print("Permuted k"+str(i+1)+" :"+dictToString(key))
 
         keys[i] = key
     return keys
