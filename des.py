@@ -5,7 +5,7 @@ from resources import *
 def getLeft(bloc):
     G = dict()
 
-    for i in range(32):
+    for i in range(28): #on est sur 56 et non 64, il faut couper en 28
         G[i] = bloc[i]
 
     return G
@@ -14,8 +14,8 @@ def getLeft(bloc):
 def getRight(bloc):
     D = dict()
 
-    for i in range(32, 64):
-        D[i - 32] = bloc[i]
+    for i in range(28, 56):
+        D[i - 28] = bloc[i]
 
     return D
 
@@ -23,10 +23,10 @@ def getRight(bloc):
 # bloc and matrix are dictionaries
 def permute(bloc, matrix):
     newbloc = dict()
-
-    for i in range(len(bloc)):
+    #print(len(bloc))
+    #print64(bloc)
+    for i in range(len(bloc)-16): #TODO alors, il faut mettre -16, mais je ne sais pas du tout pk
         newbloc[i] = bloc[matrix[i] - 1]
-
     return newbloc
 
 
@@ -60,17 +60,48 @@ def convert64to56(key):
     return newkey
 
 
-def shiftKey(key):
+def shiftKeyBy16(key):
     newKey = ""
     for i in range(0, 16):
         newKey += key[(i + 1) % 16]
     return newKey
 
 
+def shiftKeyBy8(key):
+    newKey = ""
+    for i in range(0, 8):
+        newKey += key[(i + 1) % 8]
+    return newKey
+
+
+def dictToString(dict):
+    acc = ""
+    for i in range(0, len(dict)):
+        acc += dict[i]
+
+    return acc
+
+
 def get16KeysFromKey(key):
-    keys = dict(16)
+    keys = dict()
     for i in range(0, 16):
-        key = shiftKey(key)
+        # separer la clé en deux
+        print ("la cle :" + dictToString(key))
+        tempG = dictToString(getLeft(key))
+        print("GAUCHE : " + dictToString(tempG))
+        tempD = dictToString(getRight(key))
+        print("DROITE : " + dictToString(tempD))
+        # inverser G
+        shiftKeyBy8(tempG)
+        # Inverser D
+        shiftKeyBy8(tempD)
+        # concatener G et D
+        tempGD = tempG + tempD
+        print("concaténation :" + tempGD)
+        # permuter GD par CP2
+        key = permute(tempGD, CP2)
+        print("Permuted :"+dictToString(key))
+
         keys[i] = key
     return keys
 
@@ -113,53 +144,54 @@ def openKey(inputFile):
 #                                       #
 #########################################
 def encode_des():
+    # TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
+    # TODO et la key = fileName += i
+    # TODO : entrer clé & fichier en ligne de commande
 
-  # TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
-  # TODO et la key = fileName += i
-  # TODO : entrer clé & fichier en ligne de commande
+    i = 1
+    inputFile = "M.txt"
+    keyFileName = "testKey.txt"
 
-  i=1
-  inputFile = "M.txt"
-  keyFileName = "testKey.txt"
+    K = dict()
+    blocs = []
 
-  K = dict()
-  blocs = []
+    # au choix :shrug:
+    key = getKeyFromFileName("/Messages/Clef_de_" + str(i) + ".txt")
+    key = openKey(keyFileName)
+    if key == -1: return 0
 
-  # au choix :shrug:
-  key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
-  key = openKey(keyFileName)
-  if key == -1 : return 0
+    print64(key)
+    K = convert64to56(key)
+    print56(K)
 
-  print64(key)
-  K = convert64to56(key)
-  print56(K)
+    # permutation initial
+    K = permute(K, CP1)  # TODO TO BE CONTINUED -> ERROR INDEX OUT OF RANGE
+    # print56(K)
 
-  K = permute(K, CP1)   # TODO TO BE CONTINUED -> ERROR INDEX OUT OF RANGE
-  print56(K)
+    # La permutation initial par CP1 est faite, on permute 16 fois par CP2
+    keys = get16KeysFromKey(K)
 
-  keys = get16KeysFromKey(K)
+    # Fractionnement du texte en blocs de 64 bits (8 octets)
+    for bloc in fractionText(inputFile):
+        # Permutation initiale des blocs
+        bloc = permute(bloc, PI)
+        # Découpage des blocs en deux parties: gauche et droite, nommées G et D ;
+        G = getLeft(bloc)
+        D = getRight(bloc)
 
-  # Fractionnement du texte en blocs de 64 bits (8 octets)
-  for bloc in fractionText(inputFile):
-    # Permutation initiale des blocs
-    bloc = permute(bloc, PI)
-    # Découpage des blocs en deux parties: gauche et droite, nommées G et D ;
-    G = getLeft(bloc)
-    D = getRight(bloc)
+        #   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
+        for i in range(16):
+            D = permute(D, E)  # Expansion de D0
+            printBloc(D)
 
-    #   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
-    for i in range (16):
-        D = permute(D, E) # Expansion de D0
-        printBloc(D)
+
 #         D = exOR(D, K) # OU exclusif avec la clé K1   # TODO
 #         printBloc(D)
-  #   Recollement des parties gauche et droite puis permutation initiale inverse.
+#   Recollement des parties gauche et droite puis permutation initiale inverse.
 
 # print64(key)
 # K = convert64to56(key)
 # print56(key)
-
-
 
 
 #########################################
@@ -168,4 +200,5 @@ def encode_des():
 #                                       #
 #########################################
 
-encode_des()
+# encode_des()
+get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
