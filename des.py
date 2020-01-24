@@ -23,12 +23,8 @@ def getRight(bloc):
 # bloc and matrix are dictionaries
 def permute(bloc, matrix):
     newbloc = dict()
-    #print(len(bloc))
-    #print64(bloc)
-    for i in range(len(bloc)-8): #TODO alors, il faut mettre -16, mais je ne sais pas du tout pk, les espaces?
+    for i in range(len(bloc)-8): #TODO alors, il faut mettre -8, mais je ne sais pas du tout pk, les espaces?
         newbloc[i] = bloc[matrix[i] - 1]
-    print("permute")
-    print64(newbloc)
     return newbloc
 
 
@@ -87,21 +83,15 @@ def dictToString(dict):
 def get16KeysFromKey(key):
     keys = dict()
     # separer la clé en deux
-    print("la cle :" + dictToString(key))
     tempG = dictToString(getLeft(key))
-    print("GAUCHE : " + dictToString(tempG))
     tempD = dictToString(getRight(key))
-    print("DROITE : " + dictToString(tempD))
     for i in range(0, 16):
         # shift G
         tempG = shiftKeyBy8(tempG)
-        print("shifted G : "+tempG)
         # shift D
         tempD = shiftKeyBy8(tempD)
-        print("shifted D : " + tempD)
         # concatener G et D
         tempGD = tempG + tempD
-        print("concaténation :" + tempGD)
         # permuter GD par CP2
         key = permute(tempGD, CP2)
         print("Permuted k"+str(i+1)+" :"+dictToString(key))
@@ -140,6 +130,9 @@ def openKey(inputFile):
     except:
         print(" Error : file " + inputFile + " not found")
         return -1
+
+def ronde():
+    return 0
 
 
 #########################################
