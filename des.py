@@ -1,6 +1,9 @@
 from constants import *
 from resources import *
 
+## Gets 32 first bits of a 64 bits matrix
+# param bloc : size 64 dictionary
+# returns size 32 dictionary
 def getLeft(bloc):
   G = dict()
 
@@ -9,6 +12,9 @@ def getLeft(bloc):
 
   return G
 
+## Gets 32 last bits of a 64 bits matrix
+# param bloc : size 64 dictionary
+# returns size 32 dictionary
 def getRight(bloc):
   D = dict()
 
@@ -17,7 +23,10 @@ def getRight(bloc):
 
   return D
 
-# bloc and matrix are dictionaries
+## permutes bits of a bloc in accordance to the given matrix
+# param bloc : size N dictionary
+# param matrix : size N dictionary
+# returns size N dictionary
 def permute(bloc, matrix):
   newbloc = dict()
 
@@ -26,6 +35,9 @@ def permute(bloc, matrix):
 
   return newbloc
 
+## Fractions a text from a file in blocs of 64 bits
+# param inputFile : string
+# yields size 64 dictionaries
 def fractionText(inputFile):
   f = open(inputFile, "r")
   content = f.read()
@@ -45,6 +57,9 @@ def fractionText(inputFile):
 
   f.close()
 
+## Removes the parity bits of a 64 bits key
+# param key : size 64 string
+# returns 56 size string
 def convert64to56(key):
   newkey = ""
   i = 0
@@ -75,6 +90,9 @@ def getKeyFromFileName(fileName):
   else:
     return ""
 
+## Applies the XOR operation
+# param a, b : strings
+# returns string
 def exOR(a, b):
   res = ""
     for i in range(len(a)):
@@ -84,20 +102,20 @@ def exOR(a, b):
           res += "1"
   return res
 
+## Gets a key from a file name
+# pram inputFile : string "example.txt"
+# returns string | int
 def openKey(inputFile):
   try :
     f = open(inputFile, "r")
     content = f.read()
     f.close()
-
     try:
       if len(content) == 64:
         return content
-
     except :
       print(" Error : invalid key")
       return -1
-
   except:
       print(" Error : file " + inputFile + " not found")
       return -1
