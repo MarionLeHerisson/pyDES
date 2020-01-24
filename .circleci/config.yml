@@ -18,7 +18,7 @@ jobs:
           key: v1-dependencies-{{ checksum "requirements.txt" }}
   test:
     docker:
-      - image: circleci/puthon:3.6.1
+      - image: circleci/python:3.6.1
     steps:
       - checkout
       - run:
