@@ -1,6 +1,9 @@
 from constants import *
 from resources import *
 
+## Gets 32 first bits of a 64 bits matrix
+# param bloc : size 64 dictionary
+# returns size 32 dictionary
 def getLeft(bloc):
   G = dict()
 
@@ -9,6 +12,9 @@ def getLeft(bloc):
 
   return G
 
+## Gets 32 last bits of a 64 bits matrix
+# param bloc : size 64 dictionary
+# returns size 32 dictionary
 def getRight(bloc):
   D = dict()
 
@@ -17,7 +23,10 @@ def getRight(bloc):
 
   return D
 
-# bloc and matrix are dictionaries
+## permutes bits of a bloc in accordance to the given matrix
+# param bloc : size N dictionary
+# param matrix : size N dictionary
+# returns size N dictionary
 def permute(bloc, matrix):
   newbloc = dict()
 
@@ -26,6 +35,9 @@ def permute(bloc, matrix):
 
   return newbloc
 
+## Fractions a text from a file in blocs of 64 bits
+# param inputFile : string
+# yields size 64 dictionaries
 def fractionText(inputFile):
   f = open(inputFile, "r")
   content = f.read()
@@ -45,6 +57,9 @@ def fractionText(inputFile):
 
   f.close()
 
+## Removes the parity bits of a 64 bits key
+# param key : size 64 string
+# returns 56 size string
 def convert64to56(key):
   newkey = ""
   i = 0
@@ -75,23 +90,32 @@ def getKeyFromFileName(fileName):
   else:
     return ""
 
-def exOR(matrix, key):
-  return 0
+## Applies the XOR operation
+# param a, b : strings
+# returns string
+def exOR(a, b):
+  res = ""
+    for i in range(len(a)):
+      if a[i] == b[i]:
+          res += "0"
+      else:
+          res += "1"
+  return res
 
+## Gets a key from a file name
+# pram inputFile : string "example.txt"
+# returns string | int
 def openKey(inputFile):
   try :
     f = open(inputFile, "r")
     content = f.read()
     f.close()
-
     try:
       if len(content) == 64:
         return content
-
     except :
       print(" Error : invalid key")
       return -1
-
   except:
       print(" Error : file " + inputFile + " not found")
       return -1
@@ -105,6 +129,7 @@ def openKey(inputFile):
 def encode_des():
   # TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
   # TODO et la key = fileName += i
+  # OU BIEN
   # TODO : entrer clé & fichier en ligne de commande
 
   i=1
@@ -119,6 +144,7 @@ def encode_des():
   key = openKey(keyFileName)
   if key == -1 : return 0
 
+##### GENERATION DES CLES #####
   print64(key)
   K = convert64to56(key)
   print56(K)
@@ -126,6 +152,7 @@ def encode_des():
   K = permute(K, CP1)   # TODO TO BE CONTINUED -> ERROR INDEX OUT OF RANGE
   print56(K)
 
+##### CHIFFREMENT DES #####
   # Fractionnement du texte en blocs de 64 bits (8 octets)
   for bloc in fractionText(inputFile):
     # Permutation initiale des blocs
@@ -137,9 +164,7 @@ def encode_des():
     #   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
     for i in range (16):
         D = permute(D, E) # Expansion de D0
-        printBloc(D)
-#         D = exOR(D, K) # OU exclusif avec la clé K1   # TODO
-#         printBloc(D)
+        D = exOR(D, K) # OU exclusif avec la clé K1
   #   Recollement des parties gauche et droite puis permutation initiale inverse.
 
   #keys=get16KeysFromKey(K)
