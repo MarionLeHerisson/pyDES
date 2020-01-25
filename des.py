@@ -123,7 +123,31 @@ def getKeyFromFileName(fileName):
     else:
         return ""
 
-def ronde():
+#return a dict with 8 strings
+def get8BlocsOf6Bits(EDKi):
+    result = dict()
+    acc = 0
+    stringTemp =""
+    for i in range(0,len(EDKi)):
+        print("i : " + str(i))
+        if(i % 6 == 0 and i != 0):
+            print("WOW")
+            acc = acc + 1
+            result[acc] = stringTemp
+            stringTemp = EDKi[i]
+        else:
+            stringTemp += str(EDKi[i])
+    return result
+
+
+
+def ronde(D, keys):
+    for i in range(0,16):
+        tempKey=keys[i]
+        #fonction d'expansion = permute with expension matrix ?
+        ED = permute(D,E)
+        EDKi = exOR(ED, EDKi)
+
     return 0
 
 ## Applies the XOR operation
@@ -215,6 +239,8 @@ def encode_des():
 #                                       #
 #########################################
 
-encode_des()
+#encode_des()
 ## TEST ##
 #get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
+lesBlocs = get8BlocsOf6Bits("001111111111110110100100000000000111111110100100")
+print(lesBlocs)
