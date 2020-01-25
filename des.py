@@ -36,6 +36,12 @@ def permute(bloc, matrix):
         newbloc[i] = bloc[matrix[i] - 1]
     return newbloc
 
+def permute54(bloc, matrix):
+    newbloc = dict()
+    for i in range(len(bloc)-8):
+        newbloc[i] = bloc[matrix[i] - 1]
+    return newbloc
+
 
 ## Fractions a text from a file in blocs of 64 bits
 # param inputFile : string
@@ -87,41 +93,19 @@ def shiftKeyBy8(key):
     return newKey
 
 
-def dictToString(dict):
-    acc = ""
-    for i in range(0, len(dict)):
-        acc += dict[i]
-
-    return acc
-
-
 def get16KeysFromKey(key):
     keys = dict()
-    # separer la clé en deux
-    tempG = dictToString(getLeft(key))
+    tempG = dictToString(getLeft(key)) # séparer la clé en deux
     tempD = dictToString(getRight(key))
     for i in range(0, 16):
-        # shift G
-        tempG = shiftKeyBy8(tempG)
-        # shift D
-        tempD = shiftKeyBy8(tempD)
-        # concatener G et D
-        tempGD = tempG + tempD
-        # permuter GD par CP2
-        key = permute(tempGD, CP2)
-        print("Permuted k"+str(i+1)+" :"+dictToString(key))
-
+        tempG = shiftKeyBy8(tempG) # shift G
+        tempD = shiftKeyBy8(tempD) # shift D
+        tempGD = tempG + tempD # concatener G et D
+        key = permute54(tempGD, CP2) # permuter GD par CP2
+#         print("Permuted k"+str(i+1)+" :"+dictToString(key))
         keys[i] = key
     return keys
 
-
-def getKeyFromFileName(fileName):
-    f = open(fileName, "r")
-    content = f.read()
-    if content != "" or len(content) != 64:
-        return content
-    else:
-        return ""
 
 #return a dict with 8 strings
 def get8BlocsOf6Bits(EDKi):
@@ -129,9 +113,7 @@ def get8BlocsOf6Bits(EDKi):
     acc = 0
     stringTemp =""
     for i in range(0,len(EDKi)):
-        print("i : " + str(i))
         if(i % 6 == 0 and i != 0):
-            print("WOW")
             acc = acc + 1
             result[acc] = stringTemp
             stringTemp = EDKi[i]
@@ -164,17 +146,21 @@ def getMatrixFromDictio(dictio):
         #print(matrix[i % 16 +1][tempY] )
     return matrix
 
-def getValueXY(dico, x, y):
-    matrix = getMatrixFromDictio(dico)
-    return matrix[x][y]
 
-def ronde(D, keys):
+def ronde(G, D, keys):
     for i in range(0,16):
+        print("i : "+str(i))
         tempKey=keys[i]
         #fonction d'expansion = permute with expension matrix ?
-        ED = permute(D,E)
-        EDKi = exOR(ED, EDKi)
+        ED = permute54(D,E)
+        print("ED : "+str(dictToString(ED)))
+        EDKi = exOR(ED, keys[i])
+        print("EDK"+str(i)+" : " + str(EDKi))
         blocks = get8BlocsOf6Bits(EDKi)
+        b1 = blocks[1]
+        print("b1 : "+str(b1))
+        n1=b1[0]+b1[4]
+        print("n1 : "+str(n1))
 
     return 0
 
@@ -190,23 +176,6 @@ def exOR(a, b):
             res += "1"
     return res
 
-## Gets a key from a file name
-# pram inputFile : string "example.txt"
-# returns string | int
-def openKey(inputFile):
-  try :
-    f = open(inputFile, "r")
-    content = f.read()
-    f.close()
-    try:
-      if len(content) == 64:
-        return content
-    except :
-      print(" Error : invalid key")
-      return -1
-  except:
-      print(" Error : file " + inputFile + " not found")
-      return -1
 
 
 #########################################
@@ -228,21 +197,16 @@ def encode_des():
     blocs = []
     encodedMessage = ""
 
-    # au choix :shrug:
 #     key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
     key = openKey(keyFileName)
     if key == -1 : return 0
 
 ##### GENERATION DES CLES #####
-    print64(key)
-    K = convert64to56(key)
-    print56(K)
 
-    # permutation initiale
-    K = permute(K, CP1)  # TODO TO BE CONTINUED -> ERROR INDEX OUT OF RANGE
+    K = convert64to56(key) # suppression des bits de fin
+    K = permute(K, CP1) # permutation initiale
     # print56(K)
 
-    # La permutation initiale par CP1 est faite, on permute 16 fois par CP2
     keys = get16KeysFromKey(K)
 
 ##### CHIFFREMENT DES #####
@@ -254,6 +218,8 @@ def encode_des():
         GD = ronde(D, keys)
         encodedMessage += permute(GD, PII)
 
+    writeEncodedMessage(encodedMessage)
+
 #########################################
 #                                       #
 #               M A I N                 #
@@ -261,9 +227,11 @@ def encode_des():
 #########################################
 
 #encode_des()
+
 ## TESTS ##
 # get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
 # lesBlocs = get8BlocsOf6Bits("110001100111111100101010010101111000111101001101")
 # print(lesBlocs)
 
 # print(getValueXY(S1, 16, 4))
+ronde("01111101101010110011110100101010", "01111111101100100000001111110010", get16KeysFromKey("11000000000111110100100011110010111101001001011010111111"))
