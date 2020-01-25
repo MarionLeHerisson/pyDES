@@ -33,3 +33,9 @@ def printBloc(bloc):
     for key in bloc:
         print(bloc[key], end = '')
     print(" ")
+
+def dictToString(dict):
+    acc=""
+    for i in range(0,len(dict)):
+        acc = acc + dict[i]
+    return acc
