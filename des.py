@@ -137,6 +137,8 @@ def get8BlocsOf6Bits(EDKi):
             stringTemp = EDKi[i]
         else:
             stringTemp += str(EDKi[i])
+    acc = acc + 1
+    result[acc] = stringTemp
     return result
 
 
@@ -147,6 +149,7 @@ def ronde(D, keys):
         #fonction d'expansion = permute with expension matrix ?
         ED = permute(D,E)
         EDKi = exOR(ED, EDKi)
+        blocks = get8BlocsOf6Bits(EDKi)
 
     return 0
 
@@ -240,7 +243,7 @@ def encode_des():
 #########################################
 
 #encode_des()
-## TEST ##
+## TESTS ##
 #get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
-lesBlocs = get8BlocsOf6Bits("001111111111110110100100000000000111111110100100")
+lesBlocs = get8BlocsOf6Bits("110001100111111100101010010101111000111101001101")
 print(lesBlocs)
