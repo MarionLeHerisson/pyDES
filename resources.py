@@ -40,10 +40,6 @@ def dictToString(dict):
         acc = acc + dict[i]
     return acc
 
-def getValueXY(dico, x, y):
-    matrix = getMatrixFromDictio(dico)
-    return matrix[x][y]
-
 ## Gets a key from a file name
 # pram inputFile : string "example.txt"
 # returns string | int
