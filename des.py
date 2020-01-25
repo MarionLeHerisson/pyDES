@@ -32,7 +32,13 @@ def getRight(bloc):
 # returns size N dictionary
 def permute(bloc, matrix):
     newbloc = dict()
-    for i in range(len(bloc)-8): #TODO alors, il faut mettre -8, mais je ne sais pas du tout pk, les espaces?
+    for i in range(len(bloc)): #TODO alors, il faut mettre -8, mais je ne sais pas du tout pk, les espaces?
+        newbloc[i] = bloc[matrix[i] - 1]
+    return newbloc
+
+def permute54(bloc, matrix):
+    newbloc = dict()
+    for i in range(len(bloc)-8): #
         newbloc[i] = bloc[matrix[i] - 1]
     return newbloc
 
@@ -108,7 +114,7 @@ def get16KeysFromKey(key):
         # concatener G et D
         tempGD = tempG + tempD
         # permuter GD par CP2
-        key = permute(tempGD, CP2)
+        key = permute54(tempGD, CP2)
         print("Permuted k"+str(i+1)+" :"+dictToString(key))
 
         keys[i] = key
@@ -129,9 +135,7 @@ def get8BlocsOf6Bits(EDKi):
     acc = 0
     stringTemp =""
     for i in range(0,len(EDKi)):
-        print("i : " + str(i))
         if(i % 6 == 0 and i != 0):
-            print("WOW")
             acc = acc + 1
             result[acc] = stringTemp
             stringTemp = EDKi[i]
@@ -168,13 +172,20 @@ def getValueXY(dico, x, y):
     matrix = getMatrixFromDictio(dico)
     return matrix[x][y]
 
-def ronde(D, keys):
+def ronde(G, D, keys):
     for i in range(0,16):
+        print("i : "+str(i))
         tempKey=keys[i]
         #fonction d'expansion = permute with expension matrix ?
-        ED = permute(D,E)
-        EDKi = exOR(ED, EDKi)
+        ED = permute54(D,E)
+        print("ED : "+str(dictToString(ED)))
+        EDKi = exOR(ED, keys[i])
+        print("EDK"+str(i)+" : " + str(EDKi))
         blocks = get8BlocsOf6Bits(EDKi)
+        b1 = blocks[1]
+        print("b1 : "+str(b1))
+        n1=b1[0]+b1[4]
+        print("n1 : "+str(n1))
 
     return 0
 
@@ -268,9 +279,11 @@ def encode_des():
 #########################################
 
 #encode_des()
+
 ## TESTS ##
 #get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
 #lesBlocs = get8BlocsOf6Bits("110001100111111100101010010101111000111101001101")
 #print(lesBlocs)
+#print(getValueXY(S1, 16, 4))
 
-print(getValueXY(S1, 16, 4))
+ronde("01111101101010110011110100101010", "01111111101100100000001111110010", get16KeysFromKey("11000000000111110100100011110010111101001001011010111111"))
