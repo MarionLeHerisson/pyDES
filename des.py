@@ -32,7 +32,7 @@ def getRight(bloc):
 # returns size N dictionary
 def permute(bloc, matrix):
     newbloc = dict()
-    for i in range(len(bloc)-8): #TODO alors, il faut mettre -8, mais je ne sais pas du tout pk, les espaces?
+    for i in range(len(bloc)):
         newbloc[i] = bloc[matrix[i] - 1]
     return newbloc
 
@@ -226,6 +226,7 @@ def encode_des():
 
     K = dict()
     blocs = []
+    encodedMessage = ""
 
     # au choix :shrug:
 #     key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
@@ -244,22 +245,14 @@ def encode_des():
     # La permutation initiale par CP1 est faite, on permute 16 fois par CP2
     keys = get16KeysFromKey(K)
 
-
 ##### CHIFFREMENT DES #####
     # Fractionnement du texte en blocs de 64 bits (8 octets)
     for bloc in fractionText(inputFile):
-        # Permutation initiale des blocs
-        bloc = permute(bloc, PI)
-        # Découpage des blocs en deux parties: gauche et droite, nommées G et D ;
+        bloc = permute(bloc, PI) # Permutation initiale
         G = getLeft(bloc)
         D = getRight(bloc)
-
-#   Etapes de permutation et de substitution répétées 16 fois (appelées rondes) ;
-        for i in range (16):
-            D = permute(D, E) # Expansion de D0
-            D = exOR(D, K) # OU exclusif avec la clé K1
-  #   Recollement des parties gauche et droite puis permutation initiale inverse.
-
+        GD = ronde(D, keys)
+        encodedMessage += permute(GD, PII)
 
 #########################################
 #                                       #
@@ -269,8 +262,8 @@ def encode_des():
 
 #encode_des()
 ## TESTS ##
-#get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
-#lesBlocs = get8BlocsOf6Bits("110001100111111100101010010101111000111101001101")
-#print(lesBlocs)
+# get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
+# lesBlocs = get8BlocsOf6Bits("110001100111111100101010010101111000111101001101")
+# print(lesBlocs)
 
-print(getValueXY(S1, 16, 4))
+# print(getValueXY(S1, 16, 4))
