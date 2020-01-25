@@ -204,11 +204,7 @@ def encode_des():
     if key == -1 : return 0
 
 ##### GENERATION DES CLES #####
-
-    K = convert64to56(key) # suppression des bits de fin
-    K = permute(K, CP1) # permutation initiale
-    # print56(K)
-
+    K = permute(key, CP1) # permutation initiale
     keys = get16KeysFromKey(K)
 
 ##### CHIFFREMENT DES #####
@@ -218,7 +214,7 @@ def encode_des():
         G = getLeft(bloc)
         D = getRight(bloc)
         GD = rondes(G, D, keys)
-        encodedMessage += permute(GD, PII)
+        encodedMessage += dictToString(permute(GD, PII))
 
     writeEncodedMessage(encodedMessage)
 

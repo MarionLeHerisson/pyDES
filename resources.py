@@ -24,7 +24,7 @@ def print56(key):
         if (i + 1) % 7 == 0:
             print(bit)
         else:
-            printInline(bit)
+            print(bit, end = '')
         i += 1
     print(" ")
 
@@ -67,6 +67,6 @@ def getKeyFromFileName(fileName):
         return ""
 
 def writeEncodedMessage(message):
-    f = open("encoded_message.txt", "a")
+    f = open("encoded_message.txt", "w")
     f.write(message)
     f.close()
