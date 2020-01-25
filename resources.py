@@ -33,6 +33,7 @@ def printBloc(bloc):
     for key in bloc:
         print(bloc[key], end = '')
     print(" ")
+<<<<<<< HEAD
 
 def dictToString(dict):
     acc=""
@@ -70,3 +71,12 @@ def writeFile(message, fileName):
     f = open(fileName, "w")
     f.write(message)
     f.close()
+||||||| merged common ancestors
+=======
+
+def dictToString(dict):
+    acc=""
+    for i in range(0,len(dict)):
+        acc = acc + dict[i]
+    return acc
+>>>>>>> Attention : ED et EDKi sont trop court mais bonne valeur
