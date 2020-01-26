@@ -24,6 +24,12 @@ Lancer avec `python3 des.py`.
 
 [6.2.3   Cipher and Reverse Cipher](https://academic.csuohio.edu/yuc/security/Chapter_06_Data_Encription_Standard.pdf)
 
+**Aide pour le binaire**
+
+[online UTF-8 to binary](https://onlineutf8tools.com/convert-utf8-to-binary)
+
+[online binary to UTF-8](https://onlinebinarytools.com/convert-binary-to-utf8)
+
 **Workflow git**
 
 1 - Toujours commencer par pull master, avec un repo propre (= pas de modifs en cours)

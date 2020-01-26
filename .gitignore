@@ -3,3 +3,4 @@ __pycache__/
 venv/
 encoded_message.txt
 decoded_message.txt
+Messages/binary*
