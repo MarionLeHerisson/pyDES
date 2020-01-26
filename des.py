@@ -217,8 +217,8 @@ def decode_des():
 #                                       #
 #########################################
 
-#encode_des()
-#decode_des()
+encode_des()
+decode_des()
 
 ## TESTS ##
 
@@ -227,4 +227,4 @@ def decode_des():
 # print(lesBlocs)
 #print(rondes("01111101101010110011110100101010", "01111111101100100000001111110010", get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")))
 
-print(strBin("bonjour c'est moi"))
+
