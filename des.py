@@ -1,6 +1,7 @@
 from constants import *
 from resources import *
 from ConvAlphaBin import *
+import math
 
 ## Gets 32 first bits of a 64 bits matrix
 # param bloc : size 64 dictionary
@@ -51,16 +52,16 @@ def fractionText(inputFile):
     content = f.read()
     cursor = 0
     bloc = dict()
-    loop = 1
 
-    while loop:
+    print(math.ceil(len(content)/64))
+
+    for machin in range(0,math.ceil(len(content)/64)):
         for i in range(0, 64):
             try:
                 bloc[i] = content[cursor]
-                cursor += 1
             except:
                 bloc[i] = 0
-                loop = 0
+            cursor += 1
         yield bloc
 
     f.close()
@@ -152,6 +153,18 @@ def getMatrixFromDictio(dictio):
     return matrix
 
 
+## Applies the XOR operation
+# param a, b : strings
+# returns string
+def exOR(a, b):
+    res = ""
+    for i in range(len(a)):
+        if a[i] == b[i]:
+            res += "0"
+        else:
+            res += "1"
+    return res
+
 def rondes(G, D, keys, isInverted):
     i = 0
 #     if isInverted == 1 :
@@ -183,18 +196,6 @@ def rondes(G, D, keys, isInverted):
 #     return bin_to_str(G)+bin_to_str(D)
     return G+D
 
-## Applies the XOR operation
-# param a, b : strings
-# returns string
-def exOR(a, b):
-    res = ""
-    for i in range(len(a)):
-        if a[i] == b[i]:
-            res += "0"
-        else:
-            res += "1"
-    return res
-
 
 
 #########################################
@@ -205,6 +206,7 @@ def exOR(a, b):
 def des(keys, inputFile, outputFile):
     encodedMessage = ""
     for bloc in fractionText(inputFile): # Fractionnement du texte en blocs de 64 bits (8 octets)
+        printBloc(bloc)
         bloc = permute(bloc, PI) # Permutation initiale
         G = getLeft(bloc)
         D = getRight(bloc)
@@ -236,7 +238,9 @@ def decode_des():
 #                                       #
 #########################################
 
+print("encode")
 encode_des()
+print("decode")
 decode_des()
 
 ## TESTS ##
@@ -245,3 +249,8 @@ decode_des()
 # print(lesBlocs)
 
 # rondes("01111101101010110011110100101010", "01111111101100100000001111110010", get16KeysFromKey("11000000000111110100100011110010111101001001011010111111"))
+
+
+
+# M =  1101110010111011110001001101010111100110111101111100001000110010100111010010101101101011111000110011101011011111
+# M2 = 11011100101110111100010011010101111001101111011111000010001100101001110100101011011010111110001100111010110111110000000000000000
