@@ -67,6 +67,9 @@ def getMatrixFromDictio(dictio):
         #print(matrix[i % 16 +1][tempY] )
     return matrix
 
+# enter "Marion" return "noiraM"
+def reverseString(string):
+  return string[::-1]
 
 ## Gets a key from a file name
 # pram inputFile : string "example.txt"

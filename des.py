@@ -55,8 +55,6 @@ def fractionText(inputFile):
     cursor = 0
     bloc = dict()
 
-    print(math.ceil(len(content)/64))
-
     for machin in range(0,math.ceil(len(content)/64)):
         for i in range(0, 64):
             try:
@@ -114,7 +112,6 @@ def get16KeysFromKey(key):
         tempD = shiftKeyBy8(tempD) # shift D
         tempGD = tempG + tempD # concatener G et D
         key = permute54(tempGD, CP2) # permuter GD par CP2
-#         print("Permuted k"+str(i+1)+" :"+dictToString(key))
         keys[i] = key
     return keys
 
@@ -146,16 +143,16 @@ def exOR(a, b):
     return res
 
 def rondes(G, D, keys, isInverted):
-    i = 0
-#     if isInverted == 1 :
-#         a = 15
-#         b = -1
-#         gap = -1
-#     else :
-    a = 0
-    b = 16
-    gap = 1
+    if isInverted == 1 :
+        a = 15
+        b = -1
+        gap = -1
+    else :
+        a = 0
+        b = 16
+        gap = 1
     for i in range(a,b,gap):
+        print(str(i))
         ED = permute(D,E) # expansion
         EDKi = exOR(ED, keys[i]) # XOR
         blocks = get8BlocsOf6Bits(EDKi) # 8 blocs
@@ -169,11 +166,6 @@ def rondes(G, D, keys, isInverted):
         newD = exOR(permute(newD,P), G)
         D = newD
         G = newG
-#         print("RONDE "+str(i+1))
-#         print("G = "+G)
-#         print("D = "+D)
-#         print(" ")
-#     return bin_to_str(G)+bin_to_str(D)
     return G+D
 
 
@@ -186,7 +178,6 @@ def rondes(G, D, keys, isInverted):
 def des(keys, inputFile, outputFile):
     encodedMessage = ""
     for bloc in fractionText(inputFile): # Fractionnement du texte en blocs de 64 bits (8 octets)
-        printBloc(bloc)
         bloc = permute(bloc, PI) # Permutation initiale
         G = getLeft(bloc)
         D = getRight(bloc)
@@ -208,8 +199,19 @@ def decode_des():
     key = openKey("testKey.txt")
     if key == -1 : return 0
 
-    keys = reverseKeys(get16KeysFromKey(key))
-    des(keys, "encoded_message.txt", "decoded_message.txt")
+#     keys = reverseKeys(get16KeysFromKey(key))
+#     des(keys, "encoded_message.txt", "decoded_message.txt")
+## TEST : # doing weird stuff
+    keys = get16KeysFromKey(key)
+    encodedMessage = ""
+    for bloc in fractionText("encoded_message.txt"):
+        bloc = permute(bloc, PI)
+        D = getLeft(bloc)
+        G = getRight(bloc)
+        GD = rondes(G, D, keys, 1)
+        encodedMessage += dictToString(permute(GD, PII))
+
+    writeFile(encodedMessage, "decoded_message.txt")
 
 
 
