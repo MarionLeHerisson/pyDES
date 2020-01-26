@@ -41,10 +41,6 @@ def txt2String(s_str):
     return b_str.replace("b","")
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 2e92432d103cb8734afa85244a137035edced8d1
 def conv_bin(txt):
     bin_txt = ""
     for char in FiltreTXT(txt):
