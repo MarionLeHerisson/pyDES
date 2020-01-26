@@ -41,7 +41,10 @@ def txt2String(s_str):
     return b_str.replace("b","")
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2e92432d103cb8734afa85244a137035edced8d1
 def conv_bin(txt):
     bin_txt = ""
     for char in FiltreTXT(txt):
@@ -115,7 +118,6 @@ def bin_to_str(txt):
 
     return res
 
-
 # Defining BinarytoDecimal() function
 def BinaryToDecimal(binary):
     binary1 = binary
@@ -134,8 +136,6 @@ def bin2txt(bin):
         decimal_data = BinaryToDecimal(temp_data)
         str_data = str_data + chr(decimal_data)
     return str_data
-
-
 
 # Test
 # txt0 = "Je teste au stérone !? ^_^"
