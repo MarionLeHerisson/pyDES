@@ -27,8 +27,8 @@ for i in range(0, 64) :
 	x=bin(i)
 	y='00000'+x[2:]
 	ALPHABETBINAIRE[i]=""
-	for k in range(-6, 0, -1)
-	ALPHABETBINAIRE[i]+=y[k]
+	for k in range(-6, 0, -1) :
+	    ALPHABETBINAIRE[i]+=y[k]
 
 #Renvoie la chaine de caractère txt avec uniquement les caractères de l'alphabet.
 def FiltreTXT(txt) :
@@ -49,7 +49,7 @@ def FiltreTXT(txt) :
 	return res
 	
 #Prend en paramètre un texte et renvoie la chaine binaire associée (en suivant le dictionnaire)
-def conv_bin(txt) :
+def str_to_bin(txt) :
 	X=""
 	for c in FiltreTXT(txt) : 
 		i=ALPHABET.find(c)
@@ -57,7 +57,7 @@ def conv_bin(txt) :
 	return X
 
 #Fait l'inverse de conv_bin : prend une chaine binaire et renvoie les caractères
-def nib_vnoc(txt) :
+def bin_to_str(txt) :
 	n=len(txt)
 	res=""
 	i=0
@@ -77,9 +77,9 @@ def nib_vnoc(txt) :
 	return res
 
 #Test
-txt0 = "Je teste au stérone !? ^_^"
-txt1 = conv_bin(txt0)
-txt2 = nib_vnoc(txt1)
-print(txt0)
-print(txt1)
-print(txt2)
+# txt0 = "Je teste au stérone !? ^_^"
+# txt1 = str_to_bin(txt0)
+# txt2 = bin_to_str(txt1)
+# print(txt0)
+# print(txt1)
+# print(txt2)
