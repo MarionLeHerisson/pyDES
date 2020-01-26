@@ -24,7 +24,7 @@ def print56(key):
         if (i + 1) % 7 == 0:
             print(bit)
         else:
-            printInline(bit)
+            print(bit, end = '')
         i += 1
     print(" ")
 
@@ -39,7 +39,6 @@ def dictToString(dict):
     for i in range(0,len(dict)):
         acc = acc + dict[i]
     return acc
-
 
 def getValueXY(dico, x, y):
     matrix = getMatrixFromDictio(dico)
@@ -68,6 +67,7 @@ def getMatrixFromDictio(dictio):
         #print(matrix[i % 16 +1][tempY] )
     return matrix
 
+
 ## Gets a key from a file name
 # pram inputFile : string "example.txt"
 # returns string | int
@@ -95,6 +95,6 @@ def getKeyFromFileName(fileName):
         return ""
 
 def writeEncodedMessage(message):
-    f = open("encoded_message.txt", "a")
+    f = open("encoded_message.txt", "w")
     f.write(message)
     f.close()

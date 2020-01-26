@@ -33,7 +33,7 @@ def getRight(bloc):
 def permute(bloc, matrix):
     newbloc = dict()
 
-    for i in range(len(bloc)):
+    for i in range(len(matrix)):
         newbloc[i] = bloc[matrix[i] - 1]
     return newbloc
 
@@ -114,35 +114,37 @@ def get16KeysFromKey(key):
 def get8BlocsOf6Bits(EDKi):
     result = dict()
     acc = 0
-    stringTemp =""
+    stringTemp = ""
     for i in range(0,len(EDKi)):
-        if(i % 6 == 0 and i != 0):
-            acc = acc + 1
+        stringTemp += EDKi[i]
+        if(i + 1) % 6 == 0:
             result[acc] = stringTemp
-            stringTemp = EDKi[i]
-        else:
-            stringTemp += str(EDKi[i])
-    acc = acc + 1
-    result[acc] = stringTemp
+            stringTemp = ""
+            acc = acc + 1
     return result
 
 
-def ronde(G, D, keys):
+def rondes(G, D, keys):
+    i = 0
     for i in range(0,16):
-        print("i : "+str(i))
-        tempKey=keys[i]
-        #fonction d'expansion = permute with expension matrix ?
-        ED = permute54(D,E)
-        print("ED : "+str(dictToString(ED)))
-        EDKi = exOR(ED, keys[i])
-        print("EDK"+str(i)+" : " + str(EDKi))
-        blocks = get8BlocsOf6Bits(EDKi)
-        b1 = blocks[1]
-        print("b1 : "+str(b1))
-        n1=b1[0]+b1[4]
-        print("n1 : "+str(n1))
-
-    return 0
+        ED = permute(D,E) # expansion
+        EDKi = exOR(ED, keys[i]) # XOR
+        blocks = get8BlocsOf6Bits(EDKi) # 8 blocs
+        newD = ""
+        for j in range(0,8):
+            n = int(str(blocks[j][0]) + str(blocks[j][5]), 2)
+            m = int(str(blocks[j][1]) + str(blocks[j][2]) + str(blocks[j][3]) + str(blocks[j][4]), 2)
+            blocks[j] = '{0:04b}'.format(S[j][n][m])
+            newD = newD + str(blocks[j])
+        newG = D
+        newD = exOR(permute(newD,P), G)
+        D = newD
+        G = newG
+#         print("RONDE "+str(i+1))
+#         print("G = "+G)
+#         print("D = "+D)
+#         print(" ")
+    return G+D
 
 ## Applies the XOR operation
 # param a, b : strings
@@ -182,11 +184,7 @@ def encode_des():
     if key == -1 : return 0
 
 ##### GENERATION DES CLES #####
-
-    K = convert64to56(key) # suppression des bits de fin
-    K = permute(K, CP1) # permutation initiale
-    # print56(K)
-
+    K = permute(key, CP1) # permutation initiale
     keys = get16KeysFromKey(K)
 
 ##### CHIFFREMENT DES #####
@@ -195,8 +193,8 @@ def encode_des():
         bloc = permute(bloc, PI) # Permutation initiale
         G = getLeft(bloc)
         D = getRight(bloc)
-        GD = ronde(D, keys)
-        encodedMessage += permute(GD, PII)
+        GD = rondes(G, D, keys)
+        encodedMessage += dictToString(permute(GD, PII))
 
     writeEncodedMessage(encodedMessage)
 
@@ -214,5 +212,5 @@ encode_des()
 # lesBlocs = get8BlocsOf6Bits("110001100111111100101010010101111000111101001101")
 # print(lesBlocs)
 
-# print(getValueXY(S1, 16, 4))
-# ronde("01111101101010110011110100101010", "01111111101100100000001111110010", get16KeysFromKey("11000000000111110100100011110010111101001001011010111111"))
+
+print(rondes("01111101101010110011110100101010", "01111111101100100000001111110010", get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")))

@@ -27,8 +27,8 @@ for i in range(0, 64) :
 	x=bin(i)
 	y='00000'+x[2:]
 	ALPHABETBINAIRE[i]=""
-	for k in range(-6, 0, -1)
-	ALPHABETBINAIRE[i]+=y[k]
+	for k in range(-6, 0, -1):
+		ALPHABETBINAIRE[i]+=y[k]
 
 #Renvoie la chaine de caractère txt avec uniquement les caractères de l'alphabet.
 def FiltreTXT(txt) :
