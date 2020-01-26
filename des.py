@@ -92,8 +92,16 @@ def shiftKeyBy8(key):
         newKey += key[(i+1)% len(key)]
     return newKey
 
+# keys[0] is keys[15], keys[1] is keys[14] and so on
+def reverseKeys(keys):
+    newKeys = dict()
+    for i in range(0,16):
+        newKeys[i] = keys[15-i]
+    return newKeys
+
 
 def get16KeysFromKey(key):
+    key = permute(key, CP1)
     keys = dict()
     tempG = dictToString(getLeft(key)) # séparer la clé en deux
     tempD = dictToString(getRight(key))
@@ -146,14 +154,14 @@ def getMatrixFromDictio(dictio):
 
 def rondes(G, D, keys, isInverted):
     i = 0
-    if isInverted == 1 :
-        a = 15
-        b = -1
-        gap = -1
-    else :
-        a = 0
-        b = 16
-        gap = 1
+#     if isInverted == 1 :
+#         a = 15
+#         b = -1
+#         gap = -1
+#     else :
+    a = 0
+    b = 16
+    gap = 1
     for i in range(a,b,gap):
         ED = permute(D,E) # expansion
         EDKi = exOR(ED, keys[i]) # XOR
@@ -194,56 +202,33 @@ def exOR(a, b):
 #                D E S                  #
 #                                       #
 #########################################
-def encode_des():
-    # TODO il faut faire une boucle de 1 à 6 ici non ? et mettre genre "fileName"="/Messages/Clef_de_1.txt"
-    # TODO et la key = fileName += i
-    # OU BIEN
-    # TODO : entrer clé & fichier en ligne de commande
-
-    i=1
-    inputFile = "M.txt"
-    keyFileName = "testKey.txt"
-
-    K = dict()
-    blocs = []
+def des(keys, inputFile, outputFile):
     encodedMessage = ""
-
-#     key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
-    key = openKey(keyFileName)
-    if key == -1 : return 0
-
-##### GENERATION DES CLES #####
-    K = permute(key, CP1) # permutation initiale
-    keys = get16KeysFromKey(K)
-
-##### CHIFFREMENT DES #####
-    # Fractionnement du texte en blocs de 64 bits (8 octets)
-    for bloc in fractionText(inputFile):
+    for bloc in fractionText(inputFile): # Fractionnement du texte en blocs de 64 bits (8 octets)
         bloc = permute(bloc, PI) # Permutation initiale
         G = getLeft(bloc)
         D = getRight(bloc)
         GD = rondes(G, D, keys, 0)
         encodedMessage += dictToString(permute(GD, PII))
 
-    writeFile(encodedMessage, "encoded_message.txt")
+    writeFile(encodedMessage, outputFile)
+
+def encode_des():
+#     key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
+    key = openKey("testKey.txt")
+    if key == -1 : return 0
+
+    keys = get16KeysFromKey(key)
+    des(keys, "M.txt", "encoded_message.txt")
+
 
 def decode_des():
     key = openKey("testKey.txt")
     if key == -1 : return 0
 
-    decodedMessage = ""
+    keys = reverseKeys(get16KeysFromKey(key))
+    des(keys, "encoded_message.txt", "decoded_message.txt")
 
-    K = permute(key, CP1)
-    keys = get16KeysFromKey(K)
-
-    for bloc in fractionText("encoded_message.txt"):
-        bloc = permute(bloc, PI)
-        G = getLeft(bloc)
-        D = getRight(bloc)
-        GD = rondes(G, D, keys, 1)
-        decodedMessage += dictToString(permute(GD, PII))
-
-    writeFile(decodedMessage, "decoded_message.txt")
 
 #########################################
 #                                       #
