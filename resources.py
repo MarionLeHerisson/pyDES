@@ -40,6 +40,10 @@ def dictToString(dict):
         acc = acc + dict[i]
     return acc
 
+# enter "Marion" return "noiraM"
+def reverseString(string):
+  return string[::-1]
+
 ## Gets a key from a file name
 # pram inputFile : string "example.txt"
 # returns string | int
