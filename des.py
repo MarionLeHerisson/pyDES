@@ -1,6 +1,6 @@
 from constants import *
 from resources import *
-
+from ConvAlphaBin import *
 
 ## Gets 32 first bits of a 64 bits matrix
 # param bloc : size 64 dictionary
