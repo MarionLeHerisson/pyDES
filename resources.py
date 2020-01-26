@@ -66,7 +66,7 @@ def getKeyFromFileName(fileName):
     else:
         return ""
 
-def writeEncodedMessage(message):
-    f = open("encoded_message.txt", "w")
+def writeFile(message, fileName):
+    f = open(fileName, "w")
     f.write(message)
     f.close()
