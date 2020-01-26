@@ -144,9 +144,17 @@ def getMatrixFromDictio(dictio):
     return matrix
 
 
-def rondes(G, D, keys):
+def rondes(G, D, keys, isInverted):
     i = 0
-    for i in range(0,16):
+    if isInverted == 1 :
+        a = 15
+        b = -1
+        gap = -1
+    else :
+        a = 0
+        b = 16
+        gap = 1
+    for i in range(a,b,gap):
         ED = permute(D,E) # expansion
         EDKi = exOR(ED, keys[i]) # XOR
         blocks = get8BlocsOf6Bits(EDKi) # 8 blocs
@@ -164,6 +172,7 @@ def rondes(G, D, keys):
 #         print("G = "+G)
 #         print("D = "+D)
 #         print(" ")
+#     return bin_to_str(G)+bin_to_str(D)
     return G+D
 
 ## Applies the XOR operation
@@ -213,10 +222,28 @@ def encode_des():
         bloc = permute(bloc, PI) # Permutation initiale
         G = getLeft(bloc)
         D = getRight(bloc)
-        GD = rondes(G, D, keys)
+        GD = rondes(G, D, keys, 0)
         encodedMessage += dictToString(permute(GD, PII))
 
-    writeEncodedMessage(encodedMessage)
+    writeFile(encodedMessage, "encoded_message.txt")
+
+def decode_des():
+    key = openKey("testKey.txt")
+    if key == -1 : return 0
+
+    decodedMessage = ""
+
+    K = permute(key, CP1)
+    keys = get16KeysFromKey(K)
+
+    for bloc in fractionText("encoded_message.txt"):
+        bloc = permute(bloc, PI)
+        G = getLeft(bloc)
+        D = getRight(bloc)
+        GD = rondes(G, D, keys, 1)
+        decodedMessage += dictToString(permute(GD, PII))
+
+    writeFile(decodedMessage, "decoded_message.txt")
 
 #########################################
 #                                       #
@@ -225,6 +252,7 @@ def encode_des():
 #########################################
 
 encode_des()
+decode_des()
 
 ## TESTS ##
 # get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
