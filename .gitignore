@@ -1,6 +1,7 @@
 __pycache__/
 .idea/
 venv/
-encoded_message.txt
-decoded_message.txt
+Messages/encoded_message.txt
+Messages/decoded_message.txt
 Messages/binary*
+old_README.md

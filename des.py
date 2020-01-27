@@ -172,7 +172,6 @@ def rondes(G, D, keys, isInverted):
         b = 16
         gap = 1
     for i in range(a,b,gap):
-        print(str(i))
         ED = permute(D,E) # expansion
         EDKi = exOR(ED, keys[i]) # XOR
         blocks = get8BlocsOf6Bits(EDKi) # 8 blocs
@@ -206,17 +205,24 @@ def des(keys, inputFile, outputFile):
 
     writeFile(encodedMessage, outputFile)
 
-def encode_des():
-#     key = getKeyFromFileName("/Messages/Clef_de_"+str(i)+".txt")
-    key = openKey("testKey.txt")
+## Encodes a message using DES algorithm
+# keyName : string - the name of the file containing the key
+# originalMessage : string - the name of the file containing the original message
+# encodedMessage : string - the name of the file where the encoded message will be written
+def encode_des(keyName, originalMessage, encodedMessage):
+    key = openKey(keyName)
     if key == -1 : return 0
 
     keys = get16KeysFromKey(key)
-    des(keys, "M.txt", "encoded_message.txt")
+    des(keys, originalMessage, encodedMessage)
 
 
-def decode_des():
-    key = openKey("testKey.txt")
+## Decodes a message that was encoded with the DES algorithm
+# keyName : string - the name of the file containing the key
+# message : string - the name of the file containing the encoded message
+# decodedMessage : string - the name of the file where the decoded message will be written
+def decode_des(keyName, message, decodedMessage):
+    key = openKey(keyName)
     if key == -1 : return 0
 
 #     keys = reverseKeys(get16KeysFromKey(key))
@@ -224,14 +230,14 @@ def decode_des():
 ## TEST : # doing weird stuff
     keys = get16KeysFromKey(key)
     encodedMessage = ""
-    for bloc in fractionText("encoded_message.txt"):
+    for bloc in fractionText(message):
         bloc = permute(bloc, PI)
         D = getLeft(bloc)
         G = getRight(bloc)
         GD = rondes(G, D, keys, 1)
         encodedMessage += dictToString(permute(GD, PII))
 
-    writeFile(encodedMessage, "decoded_message.txt")
+    writeFile(encodedMessage, decodedMessage)
 
 
 #########################################
@@ -239,20 +245,12 @@ def decode_des():
 #               M A I N                 #
 #                                       #
 #########################################
+keyName = "Messages/key.txt"
+originalMessage = "Messages/message.txt"
+encodedMessage = "Messages/encoded_message.txt"
+decodedMessage = "Messages/decoded_message.txt"
 
 print("encode")
-encode_des()
+encode_des(keyName, originalMessage, encodedMessage)
 print("decode")
-decode_des()
-
-## TESTS ##
-# get16KeysFromKey("11000000000111110100100011110010111101001001011010111111")
-# lesBlocs = get8BlocsOf6Bits("110001100111111100101010010101111000111101001101")
-# print(lesBlocs)
-
-# rondes("01111101101010110011110100101010", "01111111101100100000001111110010", get16KeysFromKey("11000000000111110100100011110010111101001001011010111111"))
-
-
-
-# M =  1101110010111011110001001101010111100110111101111100001000110010100111010010101101101011111000110011101011011111
-# M2 = 11011100101110111100010011010101111001101111011111000010001100101001110100101011011010111110001100111010110111110000000000000000
+decode_des(keyName, encodedMessage, decodedMessage)
